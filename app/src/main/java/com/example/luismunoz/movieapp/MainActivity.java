@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        loadJSON();
+        checkSortOrder();
 
     }
 
@@ -105,6 +108,47 @@ public class MainActivity extends AppCompatActivity {
             Client client = new Client();
             Service apiService = client.getClient().create(Service.class);
             Call<MoviesResponse> call = apiService.getPopularMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN);
+
+            call.enqueue(new Callback<MoviesResponse>() {
+                @Override
+                public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                    List<Movie> movies = response.body().getResults();
+                    recyclerView.setAdapter(new MoviesAdapter(getApplicationContext(), movies));
+                    recyclerView.smoothScrollToPosition(0);
+
+                    if (swipeContainer.isRefreshing()) {
+                        swipeContainer.setRefreshing(false);
+                    }
+                    stopProgressDialog();
+                }
+
+                @Override
+                public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                    Log.d("Error", t.getMessage());
+                    Toast.makeText(getApplicationContext(), "Error Fetching Data!", Toast.LENGTH_LONG).show();
+                }
+            });
+        }catch (Exception e){
+            Log.e("Error", e.getMessage());
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void loadJSON1() {
+
+        try {
+            if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Please obtain API key  firstly  from themoviedb.org",
+                        Toast.LENGTH_LONG).show();
+
+                stopProgressDialog();
+                return;
+            }
+
+            Client client = new Client();
+            Service apiService = client.getClient().create(Service.class);
+            Call<MoviesResponse> call = apiService.getTopRatedMovie(BuildConfig.THE_MOVIE_DB_API_TOKEN);
 
             call.enqueue(new Callback<MoviesResponse>() {
                 @Override
@@ -153,10 +197,42 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
+                Intent intent =  new Intent(this, SettingActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        Log.d(LOG_TAG, "Preferences Updated");
+        checkSortOrder();
+    }
+
+    private void checkSortOrder() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String sortOrder = preferences.getString(
+                this.getString(R.string.pref_sort_order_key),
+                this.getString(R.string.pref_most_popular));
+
+        if (sortOrder.equals(this.getString(R.string.pref_most_popular))) {
+            Log.d(LOG_TAG, "Sorting by most popular");
+            loadJSON();
+        }else {
+            Log.d(LOG_TAG, "Sorting by vote average");
+            loadJSON1();
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (movieList.isEmpty()) {
+            checkSortOrder();
+        }
+    }
+
 }
