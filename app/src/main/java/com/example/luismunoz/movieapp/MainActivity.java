@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private SwipeRefreshLayout swipeContainer;
     public static final String LOG_TAG = MoviesAdapter.class.getName();
 
+    private String language = "es";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             Client client = new Client();
             Service apiService = client.getClient().create(Service.class);
-            Call<MoviesResponse> call = apiService.getPopularMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN);
+            Call<MoviesResponse> call = apiService.getPopularMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN, language);
 
             call.enqueue(new Callback<MoviesResponse>() {
                 @Override
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             Client client = new Client();
             Service apiService = client.getClient().create(Service.class);
-            Call<MoviesResponse> call = apiService.getTopRatedMovie(BuildConfig.THE_MOVIE_DB_API_TOKEN);
+            Call<MoviesResponse> call = apiService.getTopRatedMovie(BuildConfig.THE_MOVIE_DB_API_TOKEN, language);
 
             call.enqueue(new Callback<MoviesResponse>() {
                 @Override

@@ -7,6 +7,7 @@
     <string name="plot">Plot Synopsis</string>
     <string name="rating">User Rating</string>
     <string name="release">Release Date</string>
+    <string name="trailer">Trailer</string>
     <string name="pref_sort_order_label">Sort order</string>
     <string name="pref_sort_order_key">sortOrder</string>
     <string name="pref_most_popular">Most Popular</string>

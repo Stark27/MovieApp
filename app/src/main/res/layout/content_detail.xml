@@ -105,8 +105,24 @@
                 android:textSize="20sp"
                 android:layout_below="@+id/release"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trailer"
+                android:layout_marginLeft="@dimen/layout_margin_left"
+                android:text="@string/trailer"
+                android:textAlignment="center"
+                android:layout_marginTop="@dimen/layout_margin_top2"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:layout_below="@id/release_date"/>
 
-
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recycler_view_trailer"
+                android:scrollbars="vertical">
+            </android.support.v7.widget.RecyclerView>
 
 
         </LinearLayout>
