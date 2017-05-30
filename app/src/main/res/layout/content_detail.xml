@@ -108,6 +108,24 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/addFavorite"
+                android:layout_marginLeft="@dimen/layout_margin_left"
+                android:text="@string/favoriteTitle"
+                android:textAlignment="center"
+                android:layout_marginTop="@dimen/layout_margin_top2"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:layout_below="@id/release_date"/>
+
+            <com.github.ivbaranov.mfb.MaterialFavoriteButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/favorite_button"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/trailer"
                 android:layout_marginLeft="@dimen/layout_margin_left"
                 android:text="@string/trailer"
@@ -115,13 +133,14 @@
                 android:layout_marginTop="@dimen/layout_margin_top2"
                 android:textStyle="bold"
                 android:textSize="25sp"
-                android:layout_below="@id/release_date"/>
+                android:layout_below="@id/favorite_button"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/recycler_view_trailer"
-                android:scrollbars="vertical">
+                android:scrollbars="vertical"
+                android:clipToPadding="false">
             </android.support.v7.widget.RecyclerView>
 
 

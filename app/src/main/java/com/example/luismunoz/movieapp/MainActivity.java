@@ -27,6 +27,7 @@ import com.example.luismunoz.movieapp.model.MoviesResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private SwipeRefreshLayout swipeContainer;
     public static final String LOG_TAG = MoviesAdapter.class.getName();
 
-    private String language = "es";
+    private String language;
 
 
     @Override
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 return;
             }
 
+            language = getLanguage();
+
             Client client = new Client();
             Service apiService = client.getClient().create(Service.class);
             Call<MoviesResponse> call = apiService.getPopularMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN, language);
@@ -147,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 stopProgressDialog();
                 return;
             }
+
+            language = getLanguage();
 
             Client client = new Client();
             Service apiService = client.getClient().create(Service.class);
@@ -227,6 +232,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             Log.d(LOG_TAG, "Sorting by vote average");
             loadJSON1();
         }
+    }
+
+    private String getLanguage() {
+        String languageType = Locale.getDefault().getLanguage();
+        Log.d("LANGUAGE: ", languageType);
+        return languageType;
     }
 
     @Override

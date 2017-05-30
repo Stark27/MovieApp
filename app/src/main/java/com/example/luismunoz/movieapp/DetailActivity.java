@@ -68,7 +68,7 @@ public class DetailActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(thumbnail)
                     .centerCrop()
-                    .placeholder(R.drawable.place_holder_image)
+                    .placeholder(R.color.placeholderColor)
                     .into(imageView);
 
             nameOfMovie.setText(movieName);
