@@ -48,8 +48,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         String vote = Double.toString(movieList.get(position).getVoteAverage());
         holder.userRating.setText(vote);
 
+        String poster = "https://image.tmdb.org/t/p/w500" + movieList.get(position).getPosterPath();
+
         Glide.with(mContext)
-                .load(movieList.get(position).getPosterPath())
+                .load(poster)
                 .placeholder(R.drawable.place_holder_image)
                 .into(holder.thumbnail);
 
